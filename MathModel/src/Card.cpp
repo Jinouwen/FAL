@@ -1,7 +1,4 @@
 #include "Card.h"
-#include <cstdio>
-#include <iostream>
-#include <windows.h>
 Card::Card()
 {
     //ctor
@@ -39,6 +36,6 @@ void Card::showInTerminal() const
             std::cout<<" 1W ";
             break;
         default:
-            std::cout<<" "<<suit<<DIS[num]<<" ";
+            std::cout<<" "<<" "<<DIS[num]<<" ";
     }
 }

@@ -2,6 +2,10 @@
 #define CARD_H
 
 #include <cstdio>
+#include <iostream>
+#include <windows.h>
+
+
 
 class Card
 {

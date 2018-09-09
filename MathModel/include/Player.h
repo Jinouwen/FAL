@@ -3,6 +3,7 @@
 
 #include <Card.h>
 #include <set>
+typedef  std::set<Card> cardSet;
 class Player
 {
     public:
@@ -11,16 +12,18 @@ class Player
 
         bool addCard(unsigned int id);
         bool eraseCard(unsigned int id);
+        void clearCards();
+        std::string getCardType(const cardSet &x);
 
         void showAllCard();
-        void clearCards();
+        void showType();
 
     protected:
 
     private:
         unsigned int index;
-        unsigned int reCardsNum;
-        std::set<Card> cards;
+        unsigned int cardsNum;
+        cardSet cards;
 
 };
 

@@ -1,7 +1,4 @@
 #include "MathModel.h"
-#include <ctime>
-#include <cstdlib>
-#include <algorithm>
 MathModel::MathModel()
 {
     //ctor
@@ -40,4 +37,9 @@ void MathModel::display()
     }
     hiddenCards.showAllCard();
     puts("");
+}
+bool MathModel::checkFollow(const cardSet &pre,const cardSet &now)
+{
+    if(now.empty()) return 0;
+    if(pre.empty()) return 1;
 }
