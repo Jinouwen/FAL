@@ -11,6 +11,8 @@ Player::~Player()
     //dtor
 }
 
+
+
 bool Player::addCard(unsigned int id)
 {
     Card temp(id);
@@ -19,6 +21,18 @@ bool Player::addCard(unsigned int id)
     cardsNum++;
     return 1;
 }
+
+bool Player::addCard(cardSet x)
+{
+    cardSet::iterator iter = x.begin();
+    for(;iter!=x.end();iter++)
+    {
+        addCard((*iter).id);
+    }
+    return 1;
+
+}
+
 bool Player::eraseCard(unsigned int id)
 {
     Card temp(id);
@@ -28,21 +42,44 @@ bool Player::eraseCard(unsigned int id)
     return 1;
 }
 
-void Player::showAllCard()
+bool Player::eraseCard(cardSet x)
+{
+
+    cardSet::iterator iter = x.begin();
+    for(;iter!=x.end();iter++)
+    {
+        eraseCard((*iter).id);
+    }
+    return 1;
+}
+
+int Player::getCardsNum()
+{
+    return cardsNum;
+}
+void Player::showAllCard(cardSet &cards,int opt)//
 {
     if(cards.empty())
     {
-        printf("now car\nd");
+        printf("no card\n");
         return;
     }
     std::set<Card>::iterator iter=cards.end();
+    int now=cards.size();
     do
     {
+        if(opt) std::cout<<now<<":";
         iter--;
         (*iter).showInTerminal();
+        now--;
+        std::cout<<" ";
     }
     while(iter!=cards.begin());
-
+    puts("");
+}
+void Player::showAllCard(int opt)
+{
+    showAllCard(cards,opt);
 }
 void Player::clearCards()
 {
@@ -182,4 +219,26 @@ std::string Player::getCardType(const cardSet &x)
 cardSet Player::getCardSet()
 {
     return cards;
+}
+cardSet Player::choseCard()//0½¡×³ÐÔ
+{
+    int n;
+    printf("\nChose your cards in form [N] [card1] [card2] ...[cardN]\n");
+
+    scanf("%d",&n);
+    cardSet::iterator iter = cards.begin();
+    cardSet temp;
+    int now=1,t;
+    for(int i=1;i<=n;++i)
+    {
+        scanf("%d",&t);
+        while(now<t)
+        {
+            now++;
+            iter++;
+        }
+        temp.insert(*iter);
+    }
+    return temp;
+
 }

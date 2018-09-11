@@ -20,6 +20,7 @@ class Card
         static unsigned int makeId(int suit,int type);
 
 
+
         bool operator <(const Card &b) const
         {
             return id<b.id;

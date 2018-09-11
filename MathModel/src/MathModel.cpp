@@ -9,16 +9,18 @@ MathModel::~MathModel()
     //dtor
 }
 
-void MathModel::dealtCards()
+void MathModel::dealtCards(int randSeed)
 {
+    srand(randSeed);
     int rank[55];
     for(int i=1;i<=54;++i)
         rank[i]=i;
-    srand(time(0));
+    rSeed = randSeed==0?time(0):randSeed;
+    srand(rSeed);
     unsigned int randSeed2=rand()%5+1;
     for(unsigned int i=1;i<=randSeed2;++i)
     {
-        srand(time(0));
+        //if(randSeed==0) srand(time(0));
         std::random_shuffle(rank+1,rank+54+1);
     }
     for(int i=1,now=0;i<=51;++i,now = now==2?0:now+1)
@@ -38,6 +40,7 @@ void MathModel::display()
     hiddenCards.showAllCard();
     puts("");
 }
+
 int MathModel::getRank(const cardSet &x)
 {
     unsigned int size = x.size();
@@ -124,12 +127,17 @@ int MathModel::getRank(const cardSet &x)
     }
     return -1;
 }
+
 bool MathModel::checkFollow(const cardSet &pre,const cardSet &now)
 {
     if(now.empty()) return 0;
     if(pre.empty()) return 1;
     std::string preType=Player::getCardType(pre);
     std::string nowType=Player::getCardType(now);
+
+    //std::cerr<<nowType;
+    //std::cerr<<preType;
+
     if(preType!=nowType)
     {
         if(preType=="superBoom") return 0;
@@ -140,7 +148,7 @@ bool MathModel::checkFollow(const cardSet &pre,const cardSet &now)
     }
     else
     {
-        if(preType.find("With")>0)
+        if(preType.find("With")!=std::string::npos)
         {
             return getRank(now)>getRank(pre);
         }
@@ -151,10 +159,105 @@ bool MathModel::checkFollow(const cardSet &pre,const cardSet &now)
     }
 
 }
-unsigned int Card::makeId(int suit,int type)
-{
-    if(type==14) return 53;
-    else if(type==15) return 54;
 
-    return (type-1)*4+suit;
+
+void MathModel::showSituation(int id)
+{
+    if(id>2||id<0)
+    {
+        for(int i=0;i<3;++i)
+        {
+            printf((i==landlordId)?"Landlord:":"Farmer:");
+            printf("player%d :",i);
+            players[i].showAllCard();
+        }
+    }
+    else
+    {
+        for(int i=0;i<3;++i)
+        if(i!=id)
+        {
+            printf((i==landlordId)?"Landlord:":"Farmer:");
+            printf("player%d : %d cards remaining\n",i,players[i].getCardsNum());
+        }
+        printf((id==landlordId)?"Landlord:":"Farmer:");
+        players[id].showAllCard(1);
+    }
+}
+
+void MathModel::startLocalGame()
+{
+    for(int i=0;i<3;++i) players[i].clearCards();
+
+    dealtCards(1);
+    printf("random seed:%u\n",rSeed);
+
+    showSituation(3);
+    printf("hidden cards:");
+    hiddenCards.showAllCard();
+    printf("Who is the landlord?[0-2]\n");
+    int now;
+    scanf("%d",&now);
+    landlordId=now;
+    players[now].addCard(hiddenCards.getCardSet());
+
+
+    cardSet table;
+    int last=now;
+    while(1)
+    {
+        system("cls");
+        printf("random seed:%u\n",rSeed);
+        showSituation(now);
+        printf("It's your turn player%d:\n",now);
+        if(last == now)
+        {
+            table.clear();
+            printf("no follow needs\n");
+        }
+        else
+        {
+
+            printf("you  should follow :\n");
+
+            std::cerr<<Player::getCardType(table)<<" ";
+
+            Player::showAllCard(table);
+        }
+        int opt=0;
+        cardSet temp;
+        while(1)
+        {
+            temp=players[now].choseCard();
+            Player::showAllCard(temp);
+            if(last != now &&temp.empty())
+            {
+                printf("player%d pass\n",now);
+                opt=1;
+                break;
+            }
+            if(checkFollow(table,temp))
+            {
+                opt=2;
+                break;
+            }
+            std::cout<<Player::getCardType(temp)<<std::endl;
+            printf("can not follow,please try again");
+        }
+        if(opt==2)
+        {
+            table=temp;
+            players[now].eraseCard(temp);
+            if(players[now].getCardsNum()==0)
+            {
+                printf("Winner is player%d!! the",now);
+                printf((now==landlordId)?"Landlord:\n":"Farmer:\n");
+                return;
+            }
+            last = now;
+        }
+        now++;
+        now%=3;
+    }
+
 }
