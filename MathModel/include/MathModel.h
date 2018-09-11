@@ -14,12 +14,13 @@ class MathModel
         virtual ~MathModel();
         void dealtCards();
         void display();
-        bool checkFollow(const cardSet &pre,const cardSet &now);
+        static bool checkFollow(const cardSet &pre,const cardSet &now);
     protected:
 
     private:
         Player players[3];
         Player hiddenCards;
+        static int getRank(const cardSet &x);
 
 };
 

@@ -17,6 +17,8 @@ class Card
         unsigned int num;
         unsigned int suit;
         void showInTerminal() const;
+        static unsigned int makeId(int suit,int type);
+
 
         bool operator <(const Card &b) const
         {

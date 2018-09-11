@@ -105,7 +105,7 @@ std::string Player::getCardType(const cardSet &x)
     if(size>=6 && size%3==0)
     {
         bool flag=1;
-        for(unsigned int i=3;i<=size;i+=2)
+        for(unsigned int i=3;i<=size;i+=3)
         {
             if(temp[i]!=temp[i-1]||temp[i-1]!=temp[i-2]) flag=0;
             if(i<size&&temp[i]!=temp[i+1]-1) flag=0;
@@ -125,7 +125,7 @@ std::string Player::getCardType(const cardSet &x)
         for(unsigned int i=1;i+num*3-1<=size;++i)
         {
             flag=i;
-            for(unsigned int j=i+2;j<=i+num*3-1;j+=2)
+            for(unsigned int j=i+2;j<=i+num*3-1;j+=3)
             {
                 if(temp[j]!=temp[j-1]||temp[j-1]!=temp[j-2]) flag=0;
                 if(j<i+num*3-1&&temp[j]!=temp[j+1]-1) flag=0;
@@ -148,7 +148,7 @@ std::string Player::getCardType(const cardSet &x)
         for(unsigned int i=1;i+num*3-1<=size;++i)
         {
             flag=i;
-            for(unsigned int j=i+2;j<=i+num*3-1;j+=2)
+            for(unsigned int j=i+2;j<=i+num*3-1;j+=3)
             {
                 if(temp[j]!=temp[j-1]||temp[j-1]!=temp[j-2]) flag=0;
                 if(j<i+num*3-1&&temp[j]!=temp[j+1]-1) flag=0;
@@ -177,6 +177,9 @@ std::string Player::getCardType(const cardSet &x)
         if(temp[1]==temp[2]&&temp[2]==temp[3]&&temp[3]==temp[4]&&temp[4]!=temp[5]&&temp[5]==temp[6]&&temp[6]!=temp[7]&&temp[7]==temp[8]) return "boomWithDouble";
     }
     return "notType";
+}
 
-
+cardSet Player::getCardSet()
+{
+    return cards;
 }

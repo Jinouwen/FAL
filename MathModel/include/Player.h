@@ -13,11 +13,11 @@ class Player
         bool addCard(unsigned int id);
         bool eraseCard(unsigned int id);
         void clearCards();
-        std::string getCardType(const cardSet &x);
+        static std::string getCardType(const cardSet &x);
 
         void showAllCard();
         void showType();
-
+        cardSet getCardSet();
     protected:
 
     private:
