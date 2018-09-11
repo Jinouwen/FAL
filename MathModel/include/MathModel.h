@@ -16,7 +16,7 @@ class MathModel
         void display();
         static bool checkFollow(const cardSet &pre,const cardSet &now);
 
-        void startLocalGame();
+        void startLocalGame(unsigned int randSeed=0);
         void showSituation(int id);
     protected:
 

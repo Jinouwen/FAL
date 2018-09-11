@@ -185,11 +185,11 @@ void MathModel::showSituation(int id)
     }
 }
 
-void MathModel::startLocalGame()
+void MathModel::startLocalGame(unsigned int randSeed)
 {
     for(int i=0;i<3;++i) players[i].clearCards();
 
-    dealtCards(1);
+    dealtCards(randSeed);
     printf("random seed:%u\n",rSeed);
 
     showSituation(3);
