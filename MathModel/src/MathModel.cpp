@@ -9,7 +9,7 @@ MathModel::~MathModel()
     //dtor
 }
 
-void MathModel::dealtCards(int randSeed)
+void MathModel::dealCards(int randSeed)
 {
     srand(randSeed);
     int rank[55];
@@ -189,7 +189,7 @@ void MathModel::startLocalGame(unsigned int randSeed)
 {
     for(int i=0;i<3;++i) players[i].clearCards();
 
-    dealtCards(randSeed);
+    dealCards(randSeed);
     printf("random seed:%u\n",rSeed);
 
     showSituation(3);

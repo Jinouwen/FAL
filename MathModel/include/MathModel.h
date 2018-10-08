@@ -12,7 +12,7 @@ class MathModel
     public:
         MathModel();
         virtual ~MathModel();
-        void dealtCards(int randSeed=0);
+        void dealCards(int randSeed=0);
         void display();
         static bool checkFollow(const cardSet &pre,const cardSet &now);
 

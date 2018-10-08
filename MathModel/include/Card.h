@@ -25,7 +25,7 @@ class Card
         {
             return id<b.id;
         }
-        const char DIS[14]={0,'3','4','5','6','7','8','9','X','J','Q','K','A','2'};
+         char DIS[14]={0,'3','4','5','6','7','8','9','X','J','Q','K','A','2'};
 
     protected:
 
