@@ -55,12 +55,23 @@ bool Client::log_in(std::string name, std::string pwd) {
     return send(temp);
 }
 
+bool Client::log_out() {
+    return send("lgot");
+}
+
 bool Client::sign_up(std::string name, std::string pwd) {
     std::string temp = "siup";
     temp += std::to_string(name.length()) + name;
     temp += std::to_string(pwd.length()) + pwd;
     return send(temp);
 }
+
+bool Client::ask_card() {
+    std::string temp = "akcd";
+    return send(temp);
+}
+
+
 
 
 
