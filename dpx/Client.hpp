@@ -21,7 +21,6 @@
 class Client {
 private:
     sockaddr_in server;
-    //User user;
     
 public:
     int connectSocket;
@@ -29,6 +28,7 @@ public:
     int port;
     bool status;
     char recvBuf[1024];
+    User user;
     
     Client();
     
@@ -42,8 +42,11 @@ public:
     
     bool log_in(std::string, std::string);
     
+    bool log_out();
+    
     bool sign_up(std::string, std::string);
     
+    bool ask_card();
     
     
 };
