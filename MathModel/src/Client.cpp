@@ -79,7 +79,14 @@ bool Client::sign_up(std::string name, std::string pwd) {
 }
 
 
+bool Client::log_out() {
+    return send("lgot");
+}
 
+bool Client::ask_card() {
+    std::string temp = "akcd";
+    return send(temp);
+}
 
 
 

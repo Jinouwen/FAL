@@ -44,6 +44,11 @@ public:
 
     bool sign_up(std::string, std::string);
 
+    User user;
+
+    bool log_out();
+
+    bool ask_card();
 
 
 };

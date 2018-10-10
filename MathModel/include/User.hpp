@@ -9,7 +9,7 @@ class User {
 public:
     std::string name, pwd;
     int money;
-    User(std::string name, std::string pwd, int money)
+    User(std::string name="", std::string pwd="", int money=0)
     : name(name), pwd(pwd), money(money) {}
 };
 

@@ -242,3 +242,20 @@ cardSet Player::choseCard()//0½¡×³ÐÔ
     return temp;
 
 }
+
+cardSet Player::stringToCardSet(std::string str)
+{
+    std::stringstream ss;
+    ss.clear();
+    ss.str(str);
+    int num;
+    ss>>num;
+    cardSet nowSet;
+    int temp;
+    for(int i=1;i<=num;++i)
+    {
+        ss>>temp;
+        nowSet.insert(Card(temp));
+    }
+    return nowSet;
+}
