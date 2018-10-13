@@ -1,7 +1,7 @@
 #include "User.hpp"
 
 UserControl::UserControl() {
-    std::ifstream file("/Users/turan/Documents/study/programming/c/poker/poker/user_data");
+    std::ifstream file(location);
     std::string nameTemp, pwdTemp;
     int moneyTemp;
     while (file.is_open() and !file.eof()) {
@@ -35,11 +35,21 @@ std::string UserControl::find(std::string name, std::string pwd) {
 
 void UserControl::add(std::string name, std::string pwd) {
     users.push_back(*new User(name, pwd, 0));
+    std::ofstream file(location);
+    for (std::vector<User>::iterator i = users.begin(); i < users.end(); i++) {
+        file << i->name << " " << i->pwd << " " << i->money << "\n";
+    }
 }
 
+User UserControl::get(std::string name) {
+    for (std::vector<User>::iterator i = users.begin(); i < users.end(); i++) {
+        if (i->name == name) return *i;
+    }
+    return *(new User);
+}
 
 UserControl::~UserControl() {
-    std::ofstream file("/Users/turan/Documents/study/programming/c/poker/poker/user_data");
+    std::ofstream file(location);
     for (std::vector<User>::iterator i = users.begin(); i < users.end(); i++) {
         file << i->name << " " << i->pwd << " " << i->money << "\n";
     }
