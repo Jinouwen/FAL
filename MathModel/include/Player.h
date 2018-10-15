@@ -20,6 +20,8 @@ class Player
         static std::string getCardType(const cardSet &x);
         static void showAllCard(cardSet &cards,int opt=0);
         static cardSet stringToCardSet(std::string str);
+        static std::string CardSetToString(const cardSet & cards);
+        static std::string to_string(int x);
         int getCardsNum();
 
         void showAllCard(int opt=0);//1 for show id

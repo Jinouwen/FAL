@@ -10,7 +10,14 @@ Player::~Player()
 {
     //dtor
 }
-
+std::string Player::to_string(int x)
+{
+    std::stringstream ss;
+    ss<<x;
+    std::string ans;
+    ans=ss.str();
+    return ans;
+}
 
 
 bool Player::addCard(unsigned int id)
@@ -258,4 +265,11 @@ cardSet Player::stringToCardSet(std::string str)
         nowSet.insert(Card(temp));
     }
     return nowSet;
+}
+std::string Player::CardSetToString(const cardSet &cards) {
+    std::string temp = to_string(cards.size());
+    for (std::set<Card>::iterator i = cards.begin(); i != cards.end(); i++) {
+        temp += " " + to_string(i->id);
+    }
+    return temp;
 }

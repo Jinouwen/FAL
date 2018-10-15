@@ -9,6 +9,7 @@ class ClientApp
         ClientApp();
         virtual ~ClientApp();
         int connect();
+        int logIn();
         void test();
     protected:
 

@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <ctime>
 
-#include "MathModel.h"
 #include "ClientApp.h"
 using namespace std;
 

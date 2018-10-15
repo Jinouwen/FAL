@@ -48,7 +48,9 @@ public:
 
     bool log_out();
 
-    bool ask_card();
+    bool ask_card(int id);
+
+    bool use_card(std::string s);
 
 
 };

@@ -83,10 +83,17 @@ bool Client::log_out() {
     return send("lgot");
 }
 
-bool Client::ask_card() {
-    std::string temp = "akcd";
+bool Client::ask_card(int id) {
+    std::string temp = "akcd" + to_string(id);
     return send(temp);
 }
+
+
+bool Client::use_card(std::string s) {
+    std::string temp = "uscd" + s;
+    return send(temp);
+}
+
 
 
 
