@@ -114,7 +114,7 @@ std::string Player::getCardType(const cardSet &x)
     }
     else if(size==3)
     {
-        if(temp[1]==temp[2]-1&&temp[2]==temp[3]-1&&temp[3]<=12) return "triple";
+        if(temp[1]==temp[2]&&temp[2]==temp[3]&&temp[3]<=13) return "triple";
     }
     if(size==4)
     {
@@ -229,22 +229,54 @@ cardSet Player::getCardSet()
 }
 cardSet Player::choseCard()//0½¡×³ÐÔ
 {
-    int n;
-    printf("\nChose your cards in form [N] [card1] [card2] ...[cardN]\n");
-
-    scanf("%d",&n);
-    cardSet::iterator iter = cards.begin();
-    cardSet temp;
-    int now=1,t;
-    for(int i=1;i<=n;++i)
+    printf("\nChose your cards in form [card1] [card2] ...[cardN]  in one line\n");
+    int vis[25],cardCh[25];
+    int num=0;
+    for(auto iter = cards.begin();iter!=cards.end();iter++)
     {
-        scanf("%d",&t);
-        while(now<t)
+        num++;
+        cardCh[num]=(*iter).ch;
+    }
+    cardSet temp;
+    while(1)
+    {
+        char ch;
+        int flag = 1;
+        memset(vis,0,sizeof vis);
+        while(ch=getchar(),ch<=30);
+        while(ch>30)
         {
-            now++;
-            iter++;
+            if(ch>' ')
+            {
+                if(ch == '0')  flag =-1;
+                bool f=0;
+                for(int i=1;i<=num;++i)
+                if(cardCh[i]==ch &&vis[i] == 0)
+                {
+                    vis[i] = 1;
+                    f = 1;
+                    break;
+                }
+                if(!f &&flag != -1) flag = 0;
+            }
+            ch=getchar();
         }
-        temp.insert(*iter);
+        if(flag == -1) return temp;
+        if(flag == 0)
+        {
+            printf("no such cards,try again\n");
+        }
+        else break;
+    }
+
+    num = 0;
+    for(auto iter = cards.begin();iter!=cards.end();iter++)
+    {
+        num++;
+        if(vis[num]== 1)
+        {
+            temp.insert(*iter);
+        }
     }
     return temp;
 

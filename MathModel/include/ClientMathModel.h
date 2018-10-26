@@ -1,6 +1,8 @@
 #ifndef CLIENTMATHMODEL_H
 #define CLIENTMATHMODEL_H
 #include "MathModel.h"
+#include <iomanip>
+using namespace std;
 
 class ClientMathModel:public MathModel
 {
@@ -9,8 +11,14 @@ class ClientMathModel:public MathModel
         virtual ~ClientMathModel();
         Player myself;
         void showMyself();
-    protected:
+        void init(int myId,string str);
+        void ClientShowSituation();
 
+        bool passFlag[3];
+        string playerName[3];
+        cardSet table;
+        int myId,leftId,rightId,cardNum[3];
+    protected:
     private:
 };
 

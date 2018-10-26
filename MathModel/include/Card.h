@@ -16,6 +16,7 @@ class Card
         unsigned int id;
         unsigned int num;
         unsigned int suit;
+        char ch;
         void showInTerminal() const;
         static unsigned int makeId(int suit,int type);
 

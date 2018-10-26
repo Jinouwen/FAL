@@ -130,10 +130,15 @@ int MathModel::getRank(const cardSet &x)
 
 bool MathModel::checkFollow(const cardSet &pre,const cardSet &now)
 {
-    if(now.empty()) return 0;
-    if(pre.empty()) return 1;
-    std::string preType=Player::getCardType(pre);
     std::string nowType=Player::getCardType(now);
+    std::string preType=Player::getCardType(pre);
+    if(nowType == "notType") return 0;
+    if(now.empty())
+    {
+        if(pre.empty()) return 0;
+        return 1;
+    }
+    if(pre.empty()) return 1;
 
     //std::cerr<<nowType;
     //std::cerr<<preType;

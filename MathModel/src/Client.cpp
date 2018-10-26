@@ -38,7 +38,7 @@ bool Client::connect(std::string serverIp, int serverPort) {
     //std::cerr<<(
     ::connect(connectSocket, (sockaddr*)&server, sizeof(server));
     if (recieve() == "connected" or errno == 56) {
-        std::cout << "Connected\n";
+        std::cerr << "Connected\n";
         return true;
     }
     return false;

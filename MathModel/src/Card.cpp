@@ -28,6 +28,20 @@ Card::Card(unsigned int id) : id(id)
         suit = 6;
         num=15;
     }
+
+    switch(id)
+    {
+        case 53://
+            //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_INTENSITY|FOREGROUND_RED|
+            //            FOREGROUND_GREEN|FOREGROUND_BLUE);
+            ch = 'w';
+            break;
+        case 54:
+            ch = 'W';
+            break;
+        default:
+            ch = DIS[num];
+    }
     //ctor
 }
 Card::~Card()
@@ -36,17 +50,19 @@ Card::~Card()
 }
 void Card::showInTerminal() const
 {
-    switch(id)
-    {
-        case 53://
-            //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_INTENSITY|FOREGROUND_RED|
-            //            FOREGROUND_GREEN|FOREGROUND_BLUE);
-            std::cout<<"0W ";
-            break;
-        case 54:
-            std::cout<<"1W ";
-            break;
-        default:
-            std::cout<<DIS[num]<<" ";
-    }
+    putchar(ch);
+//    putchar(' ');
+//    switch(id)
+//    {
+//        case 53://
+//            //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_INTENSITY|FOREGROUND_RED|
+//            //            FOREGROUND_GREEN|FOREGROUND_BLUE);
+//            std::cout<<"w ";
+//            break;
+//        case 54:
+//            std::cout<<"W ";
+//            break;
+//        default:
+//            std::cout<<DIS[num]<<" ";
+//    }
 }
