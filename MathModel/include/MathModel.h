@@ -18,12 +18,13 @@ class MathModel
 
         void startLocalGame(unsigned int randSeed=0);
         void showSituation(int id);
+
+        Player hiddenCards;
     protected:
 
     private:
         int landlordId;
         Player players[3];
-        Player hiddenCards;
         static int getRank(const cardSet &x);
 
         unsigned int rSeed;

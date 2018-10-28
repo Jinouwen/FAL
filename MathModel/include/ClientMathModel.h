@@ -15,9 +15,9 @@ class ClientMathModel:public MathModel
         void ClientShowSituation();
 
         bool passFlag[3];
-        string playerName[3];
+        string playerName[3],ldstr[3];
         cardSet table;
-        int myId,leftId,rightId,cardNum[3];
+        int myId,leftId,rightId,cardNum[3],ldId,bldFlag[3],scoreRate;
     protected:
     private:
 };

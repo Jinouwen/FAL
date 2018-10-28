@@ -37,7 +37,7 @@ bool Client::connect(std::string serverIp, int serverPort) {
     server.sin_addr.s_addr = inet_addr(serverIp.data());
     //std::cerr<<(
     ::connect(connectSocket, (sockaddr*)&server, sizeof(server));
-    if (recieve() == "connected" or errno == 56) {
+    if (recieve() == "cntd" or errno == 56) {
         std::cerr << "Connected\n";
         return true;
     }
