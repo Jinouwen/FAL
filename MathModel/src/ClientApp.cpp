@@ -16,6 +16,7 @@ std::string ClientApp::expectRec(std::string opt)
     {
         while(cRec = c.recieve(),cRec == "");
         std::cerr<<"#server:"+cRec<<"#"<<std::endl;
+        if(cRec.substr(0,4) == "edgm") return cRec;
         if(cRec.substr(0,4) == opt) return cRec.substr(4);
     }
 }
@@ -92,12 +93,12 @@ int ClientApp::startGame()
     printf("searching for other players,please wait\n");
 
     std::string cRec;
-    cRec = expectRec("prep");
+    if((cRec = expectRec("prep")) == "edgm") return 1;
     cmm.init(cRec[0]-'0',cRec.substr(1));
     printf("game start!\n");
-    cRec = expectRec("card");
+    if((cRec = expectRec("card")) == "edgm") return 1;
     cmm.myself.addCard(Player::stringToCardSet(cRec));
-    cRec = expectRec("csld");
+    if((cRec = expectRec("csld")) == "edgm") return 1;
     int now = cRec[0]-'0';
     int lastId = -1,firstId = -1;
     char ch;
@@ -115,7 +116,7 @@ int ClientApp::startGame()
             printf("\n\nwait for [");
             cout<<cmm.playerName[now]<<"]"<<endl;;
         }
-        cRec = expectRec("beld");
+        if((cRec = expectRec("beld")) == "edgm") return 1;
         if(cRec[0] == '1')
         {
             if(lastId == -1 ) firstId =now;
@@ -132,6 +133,7 @@ int ClientApp::startGame()
     }
     if(lastId != -1 && lastId !=firstId)
     {
+        cmm.ClientShowSituation();
         now = firstId;
         if(now == cmm.myId)
         {
@@ -144,8 +146,8 @@ int ClientApp::startGame()
             printf("\n\nwait for [");
             cout<<cmm.playerName[now]<<"]"<<endl;;
         }
-        cRec = expectRec("beld");
-        if(cRec[0] == 1)
+        if((cRec = expectRec("beld")) == "edgm") return 1;
+        if(cRec[0] == '1')
         {
             cmm.scoreRate = cmm.scoreRate == 0 ? 1 : cmm.scoreRate*2;
             lastId = now;
@@ -156,20 +158,20 @@ int ClientApp::startGame()
     if(lastId == -1)
     {
         printf("No one wanna be the landlord \nGame Over\n\n\n\n");
-        return 1;
+        return 0;
     }
 
     if(lastId == cmm.myId)
     {
         c.send("ldld");
-        cRec = expectRec("card");
+        if((cRec = expectRec("card")) == "edgm") return 1;
         cardSet temp;
         cmm.hiddenCards.addCard(temp = Player::stringToCardSet(cRec));
         cmm.myself.addCard(temp);
     }
     else
     {
-        cRec = expectRec("card");
+        if((cRec = expectRec("card")) == "edgm") return 1;
         cmm.hiddenCards.addCard(Player::stringToCardSet(cRec));
     }
 
@@ -204,7 +206,9 @@ int ClientApp::startGame()
         {
             cout<<"Its "<<cmm.playerName[now]<<"'s turn,please wait"<<endl;
         }
-        cRec = expectRec("uscd");
+
+
+        if((cRec = expectRec("uscd")) == "edgm") return 1;
         cardSet temp = Player::stringToCardSet(cRec);
         if(temp.size() == 0)
         {
@@ -212,21 +216,36 @@ int ClientApp::startGame()
         }
         else
         {
+            if(now!=cmm.ldId) cmm.springFlag = 0;
             last = now;
+            string CardsType = Player::getCardType(temp);
+            if(CardsType == "boom" || CardsType == "superBoom") cmm.scoreRate*=2;
             cmm.passFlag[now]=0;
             cmm.table = temp;
             cmm.cardNum[now] -= temp.size();
             if(cmm.cardNum[now] == 0)
             {
-                if(now == cmm.myId)
+                if(cmm.springFlag)
+                {
+                    printf("Spring!!\n");
+                    cmm.scoreRate*=2;
+                }
+                printf("Final Score rate:%d\n",cmm.scoreRate);
+                int winFlag;
+
+                if(now == cmm.myId || ( now != cmm.ldId && cmm.myId != cmm.ldId))
                 {
                     printf("\n\n----------------------------------\nCongratulation!!! You are the winner!!!\n----------------------------------\n");
                     c.send("wins");
+                    winFlag = cmm.myId == cmm.ldId ? 2 : 1;
                 }
                 else
                 {
                     printf("\n\n----------------------------------\nThe winner is [%s]\n----------------------------------\n",cmm.playerName[now].c_str());
+                    winFlag = cmm.myId == cmm.ldId ? -2 : -1;
                 }
+                printf("\nYour score:%d --> %d (%c%d)\n",cmm.playerScore[cmm.myId],cmm.playerScore[cmm.myId]+winFlag * cmm.scoreRate,winFlag>0?'+':'-',abs(winFlag) * cmm.scoreRate);
+                c.send("scor"+Player::to_string(winFlag * cmm.scoreRate));
                 break;
             }
         }
@@ -234,7 +253,7 @@ int ClientApp::startGame()
 
     }
     system("pause");
-    return 1;
+    return 0;
 }
 void ClientApp::test()
 {
@@ -244,7 +263,11 @@ void ClientApp::test()
     logIn();
     while(1)
     {
-        startGame();
+        if(startGame() == 1)
+        {
+            printf("Error !other player disconnected ,game over\n");
+        }
+
     }
 
 

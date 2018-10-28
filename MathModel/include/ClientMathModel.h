@@ -17,7 +17,7 @@ class ClientMathModel:public MathModel
         bool passFlag[3];
         string playerName[3],ldstr[3];
         cardSet table;
-        int myId,leftId,rightId,cardNum[3],ldId,bldFlag[3],scoreRate;
+        int myId,leftId,rightId,cardNum[3],ldId,bldFlag[3],scoreRate,springFlag,playerScore[3];
     protected:
     private:
 };
