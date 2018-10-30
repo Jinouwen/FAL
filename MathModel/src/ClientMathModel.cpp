@@ -36,8 +36,9 @@ void ClientMathModel::init(int _myId,string str)
         bldFlag[i] = 0;
     }
 }
-void ClientMathModel::ClientShowSituation()
+void ClientMathModel::ClientShowSituation(int opt)
 {
+    system("cls");
     for(int i=0;i<3;++i)
     {
         if(bldFlag[i] == 0)
@@ -50,8 +51,7 @@ void ClientMathModel::ClientShowSituation()
             ldstr[i] = "Landlord ";
 
     }
-    cout<<endl<<endl<<endl<<endl<<endl<<endl<<endl<<endl;
-    cout<<"--------------------------------------------------------------------------------------------------------------"<<endl;
+    cout<<"----------------------------------------------------------------"<<endl;
     printf("                 landlord's extra cards:\n                       ");
     if(ldId == -1)
         printf("? ? ?\n");
@@ -62,13 +62,21 @@ void ClientMathModel::ClientShowSituation()
     cout<<"Remain:"<<setw(38)<<setfill(' ')<<left<<cardNum[leftId];
     cout<<"Remain:"<<cardNum[rightId]<<endl;
     cout<<"Score:"<<playerScore[leftId];
-    cout<<setw(38)<<setfill(' ')<<right<<"Score:"+Player::to_string(playerScore[rightId])<<endl;
+    cout<<setw(44)<<setfill(' ')<<right<<"Score:"+Player::to_string(playerScore[rightId])<<endl;
     cout<<"  "<<(passFlag[leftId]?"PASS":"   ")<<"                                         "<<(passFlag[rightId]?"PASS":"   ")<<endl;
-    cout<<" "<<ldstr[leftId]<<"                                 "<<ldstr[rightId]<<endl;
+    cout<<ldstr[leftId]<<"                                  "<<ldstr[rightId]<<endl;
+
+    if(opt == 1)
+    {
+        players[leftId].showAllCard(2);
+        for(int i=1;i<=30-cardNum[rightId];++i)
+            putchar(' ');
+        players[rightId].showAllCard(2);
+    }
 
     cout<<endl<<endl<<endl<<"                     ";
 
-    Player::showAllCard(table);
+    Player::showAllCard(table,2);
     cout<<endl<<endl<<endl<<endl;
     cout<<"                  "<<"Scord Rate: "<<scoreRate<<endl;
     cout<<"                       "<<(passFlag[myId]?"PASS":"   ")<<endl;
@@ -78,5 +86,5 @@ void ClientMathModel::ClientShowSituation()
     cout<<"             ";
     showMyself();
     cout<<endl<<endl<<endl;
-    cout<<"-------------------------------------------------------------------------------------------------------------"<<endl;
+    cout<<"----------------------------------------------------------------"<<endl;
 }

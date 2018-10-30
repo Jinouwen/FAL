@@ -15,7 +15,7 @@ std::string ClientApp::expectRec(std::string opt)
     while(1)
     {
         while(cRec = c.recieve(),cRec == "");
-        std::cerr<<"#server:"+cRec<<"#"<<std::endl;
+        //std::cerr<<"#server:"+cRec<<"#"<<std::endl;
         if(cRec.substr(0,4) == "edgm") return cRec;
         if(cRec.substr(0,4) == opt) return cRec.substr(4);
     }
@@ -30,7 +30,8 @@ int ClientApp::connect()
     //int port;
     //cout<<"port:";
     //cin>>port;
-    while (!c.connect("192.168.1.101",60000)){
+    while (! (c.connect("192.168.1.101",60000)  || c.connect("211.83.102.34",60000)))
+    {
         if(clock()-cStart>1000)
         {
             printf(".\n");
@@ -52,16 +53,28 @@ int ClientApp::connect()
 //    }
     return 1;
 }
+void ClientApp::loadWelcome()
+{
+    printf("Loading...\n 10 %%\n");
+    Sleep(700);
+    printf("40 %% \n");
+    Sleep(900);
+    printf("72 %% \n");
+    Sleep(600);
+    printf("95 %% \n");
+    Sleep(300);
+}
 int ClientApp::logIn()
 {
+    system("cls");
     while(1)
     {
-        std::string userName,password;
-        std::cerr<<"log in or sign up:"<<std::endl;
+        std::cout<<"log in or sign up: \n[userName] [password]\n"<<std::endl;
         std::cin>>userName>>password;
         c.log_in(userName,password);
         //c.log_in("jow","666");
         std::string cRec = expectRec("lgin");
+        std::cout<<"Server: "+cRec<<endl;
         if(cRec == "done") return 0;
         if(cRec == "ntfd")
         {
@@ -86,9 +99,6 @@ int ClientApp::logIn()
 }
 int ClientApp::startGame()
 {
-    printf("press any key to start a new game\n");
-    system("pause");
-
     c.send("prep");
     printf("searching for other players,please wait\n");
 
@@ -192,8 +202,9 @@ int ClientApp::startGame()
             printf("Its your turn:\n");
             cardSet temp;
             while(temp = cmm.myself.choseCard(),
-                  !MathModel::checkFollow(cmm.table,temp))
+                   !MathModel::checkFollow(cmm.table,temp))
             {
+                cmm.ClientShowSituation();
                 cout<<Player::getCardType(temp)<<" can not follow "<<Player::getCardType(cmm.table);
 
             }
@@ -226,51 +237,130 @@ int ClientApp::startGame()
             if(cmm.cardNum[now] == 0)
             {
                 if(cmm.springFlag)
-                {
-                    printf("Spring!!\n");
                     cmm.scoreRate*=2;
-                }
-                printf("Final Score rate:%d\n",cmm.scoreRate);
                 int winFlag;
-
                 if(now == cmm.myId || ( now != cmm.ldId && cmm.myId != cmm.ldId))
-                {
-                    printf("\n\n----------------------------------\nCongratulation!!! You are the winner!!!\n----------------------------------\n");
-                    c.send("wins");
                     winFlag = cmm.myId == cmm.ldId ? 2 : 1;
-                }
                 else
-                {
-                    printf("\n\n----------------------------------\nThe winner is [%s]\n----------------------------------\n",cmm.playerName[now].c_str());
                     winFlag = cmm.myId == cmm.ldId ? -2 : -1;
-                }
-                printf("\nYour score:%d --> %d (%c%d)\n",cmm.playerScore[cmm.myId],cmm.playerScore[cmm.myId]+winFlag * cmm.scoreRate,winFlag>0?'+':'-',abs(winFlag) * cmm.scoreRate);
+
                 c.send("scor"+Player::to_string(winFlag * cmm.scoreRate));
+                c.send("lscd"+Player::CardSetToString(cmm.myself.getCardSet()));
+                for(int i=0;i<3;++i)
+                {
+                    cmm.players[i].clearCards();
+                    if((cRec = expectRec("lscd")) == "edgm") return 1;
+                    cmm.players[i].addCard(Player::stringToCardSet(cRec));
+                }
+                cmm.ClientShowSituation(1);
+                if(cmm.springFlag)
+                    printf("Spring!!\n");
+                printf("Final Score rate:%d\n",cmm.scoreRate);
+                if(now == cmm.myId) c.send("wins");
+                if(winFlag > 0)
+                    printf("--------------------------------------\nCongratulation!!! You are the winner!!!\n--------------------------------------\n");
+                else
+                    printf("----------------------------------\nThe winner is [%s]\n----------------------------------\n",cmm.playerName[now].c_str());
+                printf("\nYour score:%d --> %d (%c%d)\n",cmm.playerScore[cmm.myId],cmm.playerScore[cmm.myId]+winFlag * cmm.scoreRate,winFlag>0?'+':'-',abs(winFlag) * cmm.scoreRate);
                 break;
             }
         }
         now = (now+1) % 3;
 
     }
-    system("pause");
+    printf("[1]Continue  [2]Exit to main menu");
+    while(ch=getchar(),ch<'0'||ch>'9');
+    if(ch == '1') return 2;
+    else if(ch == '2') return 0;
     return 0;
 }
 void ClientApp::test()
 {
     std::cerr<<"test Start"<<std::endl;
-
-
+    //loadWelcome();
+    //welcome();
     logIn();
-    while(1)
-    {
-        if(startGame() == 1)
-        {
-            printf("Error !other player disconnected ,game over\n");
-        }
-
-    }
-
+    mainMenu();
 
 
     std::cerr<<"test Done"<<std::endl;
+}
+int ClientApp::mainMenu()
+{
+    while(1)
+    {
+        system("cls");
+        printf("Welcome [%s],chose your option\n[1]Start on-line game  [2]My profile [3]Exit\n",userName.c_str());
+        char ch;
+        while(ch=getchar(),ch<'0'||ch>'9');
+        if(ch=='3')
+            return 0;
+        else if(ch == '2')
+        {
+            c.send("gtsc");
+            cerr<<233;
+            stringstream ss(expectRec("gtcs"));
+            int myScore;
+            ss>>myScore;
+            cout<<"["+userName+"]:"<<endl<<"score:"+myScore<<endl;
+            system("pause");
+
+        }
+        else if(ch == '1')
+        {
+            while(1)
+            {
+                int exitCode = startGame();
+                if(exitCode == 1)
+                {
+                    printf("Error !other player disconnected ,game over\n");
+                    system("pause");
+                    break;
+                }
+                else if(exitCode == 2)
+                    ;
+                else if(exitCode == 0)
+                    break;
+            }
+        }
+
+    }
+    return 0;
+}
+void ClientApp::welcome()
+{
+    system("cls");
+    cout<<"+--------------------------------------------------------------+"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|              Welcome to Fight Against Landlord!!             |"<<endl
+        <<"|           Resize your window to get best experience          |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"|                                                              |"<<endl
+        <<"+--------------------------------------------------------------+"<<endl;
+    system("pause");
 }

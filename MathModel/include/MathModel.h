@@ -20,11 +20,11 @@ class MathModel
         void showSituation(int id);
 
         Player hiddenCards;
+        Player players[3];
     protected:
 
     private:
         int landlordId;
-        Player players[3];
         static int getRank(const cardSet &x);
 
         unsigned int rSeed;

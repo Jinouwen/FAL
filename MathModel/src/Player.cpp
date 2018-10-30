@@ -68,14 +68,14 @@ void Player::showAllCard(cardSet &cards,int opt)//
 {
     if(cards.empty())
     {
-        printf("no card\n");
+        if(opt<2) printf("no card\n");
         return;
     }
     std::set<Card>::iterator iter=cards.end();
     int now=cards.size();
     do
     {
-        if(opt) std::cout<<now<<":";
+        if(opt == 1) std::cout<<now<<":";
         iter--;
         (*iter).showInTerminal();
         now--;
@@ -229,7 +229,7 @@ cardSet Player::getCardSet()
 }
 cardSet Player::choseCard()//0½¡×³ÐÔ
 {
-    printf("\nChose your cards in form [card1] [card2] ...[cardN]  in one line\n");
+    printf("\nChose your cards in form [card1] [card2] ...[cardN]  in one line OR print a \"0\" to PASS\n");
     int vis[25],cardCh[25];
     int num=0;
     for(auto iter = cards.begin();iter!=cards.end();iter++)

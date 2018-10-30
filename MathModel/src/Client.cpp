@@ -47,6 +47,8 @@ bool Client::connect(std::string serverIp, int serverPort) {
 bool Client::send(std::string data) {
     // pack data
     // ...
+    //std::cerr<<("$send:"+data+"$")<<std::endl;
+
     ::send(connectSocket, data.data(), 1024, 0);
     return true;
 }

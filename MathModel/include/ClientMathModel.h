@@ -12,7 +12,7 @@ class ClientMathModel:public MathModel
         Player myself;
         void showMyself();
         void init(int myId,string str);
-        void ClientShowSituation();
+        void ClientShowSituation(int opt = 0);
 
         bool passFlag[3];
         string playerName[3],ldstr[3];
